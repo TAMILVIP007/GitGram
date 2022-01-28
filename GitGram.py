@@ -14,9 +14,7 @@ server = Flask(__name__)
 basicConfig(level=INFO)
 log = getLogger()
 
-ENV = bool(environ.get('ENV', False))
-
-if ENV:
+if ENV := bool(environ.get('ENV', False)):
     BOT_TOKEN = environ.get('BOT_TOKEN', None)
     PROJECT_NAME = environ.get('PROJECT_NAME', None)
     ip_addr = environ.get('APP_URL', None)
@@ -46,8 +44,8 @@ def help(_bot, update):
     """/help message for the bot"""
     message = update.effective_message
     message.reply_text(
-        f"*Available Commands*\n\n`/connect` - Setup how to connect this chat to receive Git activity notifications.\n`/support` - Get links to get support if you're stuck.\n`/source` - Get the Git repository URL.",
-        parse_mode="markdown"
+        "*Available Commands*\n\n`/connect` - Setup how to connect this chat to receive Git activity notifications.\n`/support` - Get links to get support if you're stuck.\n`/source` - Get the Git repository URL.",
+        parse_mode="markdown",
     )
 
 
@@ -55,8 +53,8 @@ def support(_bot, update):
     """Links to Support"""
     message = update.effective_message
     message.reply_text(
-        f"*Getting Support*\n\nTo get support in using the bot, join [the GitGram support](https://t.me/GitGramChat).",
-        parse_mode="markdown"
+        '*Getting Support*\n\nTo get support in using the bot, join [the GitGram support](https://t.me/GitGramChat).',
+        parse_mode="markdown",
     )
 
 
@@ -64,8 +62,8 @@ def source(_bot, update):
     """Link to Source"""
     message = update.effective_message
     message.reply_text(
-        f"*Source*:\n[GitGram Repo](https://waa.ai/GitGram).",
-        parse_mode="markdown"
+        '*Source*:\n[GitGram Repo](https://waa.ai/GitGram).',
+        parse_mode="markdown",
     )
 
 
@@ -101,19 +99,18 @@ else:
 
 def post_tg(chat, message, parse_mode):
     """Send message to desired group"""
-    response = post(
+    return post(
         TG_BOT_API + "sendMessage",
         params={
             "chat_id": chat,
             "text": message,
             "parse_mode": parse_mode,
             "disable_web_page_preview": True}).json()
-    return response
 
 
 def reply_tg(chat, message_id, message, parse_mode):
     """reply to message_id"""
-    response = post(
+    return post(
         TG_BOT_API + "sendMessage",
         params={
             "chat_id": chat,
@@ -121,7 +118,6 @@ def reply_tg(chat, message_id, message, parse_mode):
             "text": message,
             "parse_mode": parse_mode,
             "disable_web_page_preview": True}).json()
-    return response
 
 
 @server.route("/", methods=['GET'])
